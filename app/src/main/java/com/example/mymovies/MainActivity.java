@@ -18,15 +18,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(NetworkUtils.TOP_RATED,3);
-        if(jsonObject == null)
-        {
-            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(this,"Good",Toast.LENGTH_SHORT).show();
-        }
+
 
     }
 }
