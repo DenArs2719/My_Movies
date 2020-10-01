@@ -59,6 +59,8 @@ public class NetworkUtils
                     .build();
 
         try {
+            ///получем нашу строку
+            ///get our url
             result = new URL(uri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -74,7 +76,6 @@ public class NetworkUtils
         URL url = buildURL(sortBy,page);
         try {
             result = new JSONLoadTask().execute(url).get();
-
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
