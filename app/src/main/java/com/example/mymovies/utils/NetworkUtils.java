@@ -2,10 +2,21 @@
 package com.example.mymovies.utils;
 
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.JsonReader;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 import static android.provider.CalendarContract.CalendarCache.URI;
 
@@ -28,7 +39,7 @@ public class NetworkUtils
     public static final int POPULARITY = 0;
     public static final int TOP_RATED = 1;
 
-    public static URL buildURL(int sortBy,int page)
+    private static URL buildURL(int sortBy,int page)
     {
         URL result = null;
         String methodOfSort;
@@ -53,6 +64,86 @@ public class NetworkUtils
             e.printStackTrace();
         }
         return result;
+    }
+
+    ///метод для получения JSON из сети
+    ///method for getting JSON from network
+    public  static JSONObject getJSONFromNetwork(int sortBy,int page)
+    {
+        JSONObject result = null;
+        URL url = buildURL(sortBy,page);
+        try {
+            result = new JSONLoadTask().execute(url).get();
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return  result;
+    }
+
+    private static class JSONLoadTask extends AsyncTask<URL,Void, JSONObject>
+    {
+
+        @Override
+        protected JSONObject doInBackground(URL... urls)
+        {
+            JSONObject result = null;
+            if(urls == null || urls.length == 0)
+            {
+                return result;
+            }
+
+            ///открываем соединение
+            ///open connection
+            HttpURLConnection connection = null;
+            try
+            {
+
+                connection = (HttpURLConnection) urls[0].openConnection();
+
+                ///создаем поток ввода
+                ///create an input stream
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+                ///читаем строками
+                ///read in lines
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                ///для хранения всего результата
+                ///to store the entire result
+                StringBuilder builder = new StringBuilder();
+
+                ///читаем данные
+                ///read data
+                String line = bufferedReader.readLine();
+                while (line != null)
+                {
+                    builder.append(line);
+                    line = bufferedReader.readLine();
+                }
+
+                ///возврашаем нашу строчку
+                ///return our result
+                result = new JSONObject(builder.toString());
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                if(connection != null)
+                {
+                    connection.disconnect();
+                }
+            }
+
+            return result;
+        }
     }
 
 
