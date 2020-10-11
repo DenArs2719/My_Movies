@@ -3,7 +3,6 @@ package com.example.mymovies.utils;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.JsonReader;
 
 
 import org.json.JSONException;
@@ -18,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
-import static android.provider.CalendarContract.CalendarCache.URI;
 
 public class NetworkUtils
 {
@@ -39,6 +37,7 @@ public class NetworkUtils
     public static final int POPULARITY = 0;
     public static final int TOP_RATED = 1;
 
+    ///метод,который формирует запрос
     private static URL buildURL(int sortBy,int page)
     {
         URL result = null;
@@ -87,7 +86,6 @@ public class NetworkUtils
 
     private static class JSONLoadTask extends AsyncTask<URL,Void, JSONObject>
     {
-
         @Override
         protected JSONObject doInBackground(URL... urls)
         {
@@ -102,7 +100,6 @@ public class NetworkUtils
             HttpURLConnection connection = null;
             try
             {
-
                 connection = (HttpURLConnection) urls[0].openConnection();
 
                 ///создаем поток ввода
@@ -130,7 +127,6 @@ public class NetworkUtils
                 ///возврашаем нашу строчку
                 ///return our result
                 result = new JSONObject(builder.toString());
-
 
             } catch (IOException e) {
                 e.printStackTrace();

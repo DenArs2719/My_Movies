@@ -1,7 +1,6 @@
 ///convert JSON in object
 package com.example.mymovies.utils;
 
-import android.renderscript.Allocation;
 
 import com.example.mymovies.data.Movie;
 
