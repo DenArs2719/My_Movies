@@ -1,8 +1,13 @@
 ///class to store object in database
 package com.example.mymovies.data;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "movies")
 public class Movie
 {
+    @PrimaryKey
     private int id;
     private int voteCount;
     private String title;
@@ -28,39 +33,48 @@ public class Movie
         this.releaseDate = releaseDate;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
-    public int getVoteCount() {
+    public int getVoteCount()
+    {
         return voteCount;
     }
 
-    public void setVoteCount(int voteCount) {
+    public void setVoteCount(int voteCount)
+    {
         this.voteCount = voteCount;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(String title)
+    {
         this.title = title;
     }
 
-    public String getOriginalTitle() {
+    public String getOriginalTitle()
+    {
         return originalTitle;
     }
 
-    public void setOriginalTitle(String originalTitle) {
+    public void setOriginalTitle(String originalTitle)
+    {
         this.originalTitle = originalTitle;
     }
 
-    public String getOverview() {
+    public String getOverview()
+    {
         return overview;
     }
 

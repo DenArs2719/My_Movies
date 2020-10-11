@@ -16,16 +16,26 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 {
     private ArrayList<Movie> movies;
+
+
     private OnPosterClickListener onPosterClickListener;
+    private OnReachEndListener onReachEndListener;
 
     public MovieAdapter()
     {
         movies = new ArrayList<>();
     }
 
+    ///интерфейс для обработки нажатия на фильм(постер)
     interface  OnPosterClickListener
     {
         void onPosterClick(int position);
+    }
+
+    ///интерфейс для подгрузки фильмом,когда пользователь долистал до конца первую старницу и т.д
+    interface OnReachEndListener
+    {
+        void onReachEnd();
     }
     @NonNull
     @Override
@@ -39,6 +49,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position)
     {
+        ///подгружаем данные, когда пользователь практически дошел до конца списка
+        if(position > movies.size() - 4 && onReachEndListener != null)
+        {
+            onReachEndListener.onReachEnd();
+        }
         ///получаем фильм
         Movie movie = movies.get(position);
         ///получем картинку
@@ -76,6 +91,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
         this.onPosterClickListener = onPosterClickListener;
+    }
+
+    public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
+        this.onReachEndListener = onReachEndListener;
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder

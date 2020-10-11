@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
     private Switch switchSort;
     private TextView textViewPopularity;
     private TextView textViewTopRated;
+    private int numberOfPage = 0;
 
 
     @Override
@@ -65,6 +66,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        adapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener()
+        {
+            @Override
+            public void onReachEnd()
+            {
+                Toast.makeText(MainActivity.this,"end of list",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -106,5 +115,31 @@ public class MainActivity extends AppCompatActivity
         ///устанавливаем фильмы у адаптера
         adapter.setMovies(movies);
 
+    }
+
+    private void loadData(boolean isTopRated,int page)
+    {
+        int methodOfSort = 0;
+
+        if(isTopRated)
+        {
+            methodOfSort = NetworkUtils.TOP_RATED;
+            textViewTopRated.setTextColor(getResources().getColor(R.color.colorAccent));
+            textViewPopularity.setTextColor(getResources().getColor(R.color.white_color));
+        }
+        else
+        {
+            methodOfSort = NetworkUtils.POPULARITY;
+            textViewPopularity.setTextColor(getResources().getColor(R.color.colorAccent));
+            textViewTopRated.setTextColor(getResources().getColor(R.color.white_color));
+        }
+
+        ///получем список фильмов
+        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort,page);
+
+        ///получем список фильмом
+        ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(jsonObject);
+        ///устанавливаем фильмы у адаптера
+        adapter.setMovies(movies);
     }
 }
