@@ -16,10 +16,16 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 {
     private ArrayList<Movie> movies;
+    private OnPosterClickListener onPosterClickListener;
 
     public MovieAdapter()
     {
         movies = new ArrayList<>();
+    }
+
+    interface  OnPosterClickListener
+    {
+        void onPosterClick(int position);
     }
     @NonNull
     @Override
@@ -56,6 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
+
     public ArrayList<Movie> getMovies() {
         return movies;
     }
@@ -67,6 +74,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
+    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
+        this.onPosterClickListener = onPosterClickListener;
+    }
+
     class MovieViewHolder extends RecyclerView.ViewHolder
     {
         private ImageView imageViewSmallPoster;
@@ -75,6 +86,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(onPosterClickListener != null)
+                    {
+                        onPosterClickListener.onPosterClick(getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }

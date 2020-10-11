@@ -11,6 +11,7 @@ import android.widget.Adapter;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.mymovies.data.Movie;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private TextView textViewPopularity;
     private TextView textViewTopRated;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this,2));
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
-        textViewPopularity = findViewById(R.id.textViewTopRated);
+        textViewTopRated = findViewById(R.id.textViewTopRated);
         adapter = new MovieAdapter();
         switchSort.setChecked(true);
         ///устанавливаем адаптер в recyclerViewPosters
@@ -55,10 +57,18 @@ public class MainActivity extends AppCompatActivity
         });
         switchSort.setChecked(false);
 
+        adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
+            @Override
+            public void onPosterClick(int position)
+            {
+                Toast.makeText(MainActivity.this,"cliked"+position,Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 
-    public void onClickSetPopularuty(View view)
+    public void onClickSetPopularity(View view)
     {
         setMethodOfSort(false);
         switchSort.setChecked(false);
