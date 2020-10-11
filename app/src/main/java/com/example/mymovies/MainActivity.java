@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity
                 Movie movie = adapter.getMovies().get(position);
 
                 ///создаем Intent
+                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                intent.putExtra("id",movie.getId());
+                startActivity(intent);
             }
         });
 
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onReachEnd()
             {
-                Toast.makeText(MainActivity.this,"end of list",Toast.LENGTH_SHORT).show();
+
             }
         });
 

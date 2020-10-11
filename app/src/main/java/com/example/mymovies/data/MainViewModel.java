@@ -14,6 +14,7 @@ public class MainViewModel extends AndroidViewModel
 {
     private static MovieDataBase dataBase;
     private LiveData<List<Movie>> movies;
+    private LiveData<List<FavouriteMovie>> favouriteMovies;
 
     public MainViewModel(@NonNull Application application)
     {
@@ -22,11 +23,17 @@ public class MainViewModel extends AndroidViewModel
 
         ///метод автоматически будет выполняться в другом программном потоке
         movies = dataBase.movieDao().getAllMovies();
+        favouriteMovies = dataBase.movieDao().getAllMoviesFromFavourites();
     }
 
     public LiveData<List<Movie>> getMovies()
     {
         return movies;
+    }
+
+    public LiveData<List<FavouriteMovie>> getFavouriteMovies()
+    {
+        return favouriteMovies;
     }
 
     ///метод для получения фильма по id
@@ -42,6 +49,7 @@ public class MainViewModel extends AndroidViewModel
 
         return null;
     }
+
 
     ///метод для удаления фильмов
     public void deleteAllMovies()
@@ -111,6 +119,77 @@ public class MainViewModel extends AndroidViewModel
         {
             if (movies != null && movies.length > 0) {
                 dataBase.movieDao().deleteMovie(movies[0]);
+            }
+            return null;
+        }
+    }
+
+    ///работа с базой favourite_movies
+    ///метод для вставки фильма
+    public void insertMovieToFavourite(FavouriteMovie movie)
+    {
+        new InsertIntoFavoriteTask().execute(movie);
+    }
+
+    ///метод для удаления фильма
+    public void deleteMovieFromFavourite(FavouriteMovie movie)
+    {
+        new DeleteFromFavouriteTask().execute(movie);
+    }
+
+    ///метод для получения фильма по id
+    public FavouriteMovie getFavouriteMovieById(int movieId)
+    {
+        try {
+            return new GetFavouriteMovieTask().execute(movieId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    ///класс для потока, получения фильма из базы
+    private static class GetFavouriteMovieTask extends AsyncTask<Integer,Void,FavouriteMovie>
+    {
+
+        @Override
+        protected FavouriteMovie doInBackground(Integer... integers) {
+            if(integers != null && integers.length > 0 )
+            {
+                return dataBase.movieDao().getFavouriteMovieById(integers[0]);
+            }
+            return null;
+        }
+    }
+
+    ///класс для потока, вставки фильма в базу
+    private static class InsertIntoFavoriteTask extends AsyncTask<FavouriteMovie, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(FavouriteMovie... movies)
+        {
+            if(movies != null && movies.length > 0)
+            {
+                dataBase.movieDao().insertMovieToFavourite(movies[0]);
+            }
+
+            return null;
+        }
+    }
+
+    ///класс для потока, удаления фильма из базы
+    private static class DeleteFromFavouriteTask extends AsyncTask<FavouriteMovie, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(FavouriteMovie... movies)
+        {
+            if (movies != null && movies.length > 0) {
+                dataBase.movieDao().deleteMovieToFavourite(movies[0]);
             }
             return null;
         }

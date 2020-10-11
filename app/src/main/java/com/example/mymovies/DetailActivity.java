@@ -2,23 +2,34 @@
 package com.example.mymovies;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.room.PrimaryKey;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.mymovies.data.FavouriteMovie;
+import com.example.mymovies.data.MainViewModel;
+import com.example.mymovies.data.Movie;
+import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity
 {
     private ImageView imageViewBigPoster;
-    private TextView textViewLabelTitle;
     private TextView textViewTitle;
-    private TextView textViewLabelOriginalTitle;
-    private TextView textViewLabelRating;
+    private TextView textViewOriginalTitle;
     private TextView textViewRating;
-    private TextView textViewLabelReleaseDate;
     private TextView textViewReleaseDate;
-    private TextView textViewLabelDescription;
     private TextView textViewOverview;
+    private Movie movie;
+
+    private int id = 0;
+
+    private MainViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -26,17 +37,55 @@ public class DetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_detail);
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         textViewTitle = findViewById(R.id.textViewTitle);
-        textViewLabelOriginalTitle = findViewById(R.id.textViewLabelOriginalTitle);
-        textViewLabelTitle = findViewById(R.id.textViewLabelTitle);
-        textViewLabelRating = findViewById(R.id.textViewLabelRating);
+        textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
         textViewRating = findViewById(R.id.textViewRating);
-        textViewLabelReleaseDate = findViewById(R.id.textViewLabelReleaseDate);
         textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
-        textViewLabelDescription = findViewById(R.id.textViewLabelDescription);
         textViewOverview = findViewById(R.id.textViewOverview);
 
+        ///получаем наши данные
+        Intent intent = getIntent();
+        if(intent != null && intent.hasExtra("id"))
+        {
+            id = intent.getIntExtra("id",-1);
+        }
+        else
+        {
+            ///закрываем активность,если ошибка
+            finish();
+        }
+
+        ///получаем наш  viewModel
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        /// получаем наш фильм
+        movie = viewModel.getMovieById(id);
+
+        Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+        textViewTitle.setText(movie.getTitle());
+        textViewOriginalTitle.setText(movie.getOriginalTitle());
+        textViewOverview.setText(movie.getOverview());
+        textViewReleaseDate.setText(movie.getReleaseDate());
+        textViewRating.setText(Double.toString(movie.getVoteAverage()));
 
 
 
+    }
+
+    public void onClickChangeFavourite(View view)
+    {
+        FavouriteMovie favouriteMovie = viewModel.getFavouriteMovieById(id);
+
+        ///значит,что фильма в базе данных нет
+        if(favouriteMovie == null)
+        {
+            ///вставляем нужный обьект
+            viewModel.insertMovieToFavourite(new FavouriteMovie(movie));
+            Toast.makeText(DetailActivity.this, R.string.added_to_favourite,Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            viewModel.deleteMovieFromFavourite(favouriteMovie);
+            Toast.makeText(DetailActivity.this, R.string.deleted_from_favourite,Toast.LENGTH_SHORT).show();
+        }
     }
 }

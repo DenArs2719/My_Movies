@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Movie.class},version = 1,exportSchema = false)
+@Database(entities = {Movie.class,FavouriteMovie.class},version = 2,exportSchema = false)
 public abstract class MovieDataBase extends RoomDatabase
 {
     private static MovieDataBase dataBase;
@@ -18,7 +18,7 @@ public abstract class MovieDataBase extends RoomDatabase
         ///для многопоточности
         synchronized (LOCK) {
             if (dataBase == null) {
-                dataBase = Room.databaseBuilder(context, MovieDataBase.class, DB_NAME).build();
+                dataBase = Room.databaseBuilder(context, MovieDataBase.class, DB_NAME).fallbackToDestructiveMigration().build();
             }
         }
         return dataBase;
