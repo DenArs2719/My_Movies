@@ -70,7 +70,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPosterClick(int position)
             {
-                Toast.makeText(MainActivity.this,"cliked"+position,Toast.LENGTH_SHORT).show();
+                ///получаем фильм на который нажали
+                Movie movie = adapter.getMovies().get(position);
+
+                ///создаем Intent
             }
         });
 

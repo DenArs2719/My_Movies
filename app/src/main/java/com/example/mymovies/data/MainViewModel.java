@@ -14,6 +14,7 @@ public class MainViewModel extends AndroidViewModel
 {
     private static MovieDataBase dataBase;
     private LiveData<List<Movie>> movies;
+
     public MainViewModel(@NonNull Application application)
     {
         super(application);
@@ -21,6 +22,11 @@ public class MainViewModel extends AndroidViewModel
 
         ///метод автоматически будет выполняться в другом программном потоке
         movies = dataBase.movieDao().getAllMovies();
+    }
+
+    public LiveData<List<Movie>> getMovies()
+    {
+        return movies;
     }
 
     ///метод для получения фильма по id
@@ -37,24 +43,22 @@ public class MainViewModel extends AndroidViewModel
         return null;
     }
 
+    ///метод для удаления фильмов
     public void deleteAllMovies()
     {
        new DeleteMoviesTask().execute();
     }
 
+    ///метод для вставки фильма
     public void insertMovie(Movie movie)
     {
         new InsertMoviesTask().execute(movie);
     }
 
+    ///метод для удаления фильма
     public void deleteMovie(Movie movie)
     {
         new DeleteTask().execute(movie);
-    }
-
-    public LiveData<List<Movie>> getMovies()
-    {
-        return movies;
     }
 
     ///класс для потока, получения фильма из базы
