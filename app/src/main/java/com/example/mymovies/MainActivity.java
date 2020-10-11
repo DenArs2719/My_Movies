@@ -1,6 +1,9 @@
 package com.example.mymovies;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.mymovies.data.MainViewModel;
 import com.example.mymovies.data.Movie;
 import com.example.mymovies.utils.JSONUtils;
 import com.example.mymovies.utils.NetworkUtils;
@@ -21,6 +25,7 @@ import com.example.mymovies.utils.NetworkUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -29,7 +34,9 @@ public class MainActivity extends AppCompatActivity
     private Switch switchSort;
     private TextView textViewPopularity;
     private TextView textViewTopRated;
-    private int numberOfPage = 0;
+
+
+    private MainViewModel viewModel;
 
 
     @Override
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         adapter = new MovieAdapter();
         switchSort.setChecked(true);
         ///устанавливаем адаптер в recyclerViewPosters
@@ -72,6 +80,18 @@ public class MainActivity extends AppCompatActivity
             public void onReachEnd()
             {
                 Toast.makeText(MainActivity.this,"end of list",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        LiveData<List<Movie>> moviesFromLifeData = viewModel.getMovies();
+        ///добавляем observer
+        moviesFromLifeData.observe(this, new Observer<List<Movie>>()
+        {
+            ///Теперь ,когда каждый раз данные будут меняться в базе.Мы будем их устанавливать у adapter
+            @Override
+            public void onChanged(List<Movie> movies)
+            {
+                adapter.setMovies(movies);
             }
         });
 
@@ -106,40 +126,28 @@ public class MainActivity extends AppCompatActivity
             textViewPopularity.setTextColor(getResources().getColor(R.color.colorAccent));
             textViewTopRated.setTextColor(getResources().getColor(R.color.white_color));
         }
-
-        ///получем список фильмов
-        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort,1);
-
-        ///получем список фильмом
-        ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(jsonObject);
-        ///устанавливаем фильмы у адаптера
-        adapter.setMovies(movies);
+        downloadData(methodOfSort,1);
 
     }
 
-    private void loadData(boolean isTopRated,int page)
+    private void downloadData(int methodOfSort, int page)
     {
-        int methodOfSort = 0;
-
-        if(isTopRated)
-        {
-            methodOfSort = NetworkUtils.TOP_RATED;
-            textViewTopRated.setTextColor(getResources().getColor(R.color.colorAccent));
-            textViewPopularity.setTextColor(getResources().getColor(R.color.white_color));
-        }
-        else
-        {
-            methodOfSort = NetworkUtils.POPULARITY;
-            textViewPopularity.setTextColor(getResources().getColor(R.color.colorAccent));
-            textViewTopRated.setTextColor(getResources().getColor(R.color.white_color));
-        }
-
         ///получем список фильмов
         JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort,page);
 
         ///получем список фильмом
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(jsonObject);
-        ///устанавливаем фильмы у адаптера
-        adapter.setMovies(movies);
+
+        ///если пришли новые данные, то мы их загрузим
+        if(movies != null && !movies.isEmpty())
+        {
+            ///отчистим предыдушие данные
+            viewModel.deleteAllMovies();
+            for(Movie movie: movies)
+            {
+                ///и вставим новые данные
+                viewModel.insertMovie(movie);
+            }
+        }
     }
 }
