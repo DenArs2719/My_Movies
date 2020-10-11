@@ -3,6 +3,7 @@ package com.example.mymovies.utils;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 import org.json.JSONException;
@@ -21,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 public class NetworkUtils
 {
     private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
-
     private static final String PARAMS_API_KEY = "api_key";
     private static final String PARAMS_LANGUAGE = "language";
     private static final String PARAMS_SORT_BY = "sort_by";
@@ -127,6 +127,8 @@ public class NetworkUtils
                 ///возврашаем нашу строчку
                 ///return our result
                 result = new JSONObject(builder.toString());
+
+                Log.i("NetworkUtils",result.toString());
 
             } catch (IOException e) {
                 e.printStackTrace();
