@@ -19,6 +19,7 @@ public class MainViewModel extends AndroidViewModel
     public MainViewModel(@NonNull Application application)
     {
         super(application);
+        ///получаем базу данных
         dataBase = MovieDataBase.getInstance(getApplication());
 
         ///метод автоматически будет выполняться в другом программном потоке

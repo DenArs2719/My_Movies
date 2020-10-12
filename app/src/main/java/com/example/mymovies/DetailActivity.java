@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,10 +27,12 @@ public class DetailActivity extends AppCompatActivity
     private TextView textViewReleaseDate;
     private TextView textViewOverview;
     private Movie movie;
+    private ImageView imageViewAddToFavourite;
 
     private int id = 0;
 
     private MainViewModel viewModel;
+    private FavouriteMovie favouriteMovie;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -41,6 +44,7 @@ public class DetailActivity extends AppCompatActivity
         textViewRating = findViewById(R.id.textViewRating);
         textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
         textViewOverview = findViewById(R.id.textViewOverview);
+        imageViewAddToFavourite = findViewById(R.id.imageViewAddToFavourite);
 
         ///получаем наши данные
         Intent intent = getIntent();
@@ -67,13 +71,13 @@ public class DetailActivity extends AppCompatActivity
         textViewReleaseDate.setText(movie.getReleaseDate());
         textViewRating.setText(Double.toString(movie.getVoteAverage()));
 
+        setFavourite();
 
 
     }
 
     public void onClickChangeFavourite(View view)
     {
-        FavouriteMovie favouriteMovie = viewModel.getFavouriteMovieById(id);
 
         ///значит,что фильма в базе данных нет
         if(favouriteMovie == null)
@@ -86,6 +90,20 @@ public class DetailActivity extends AppCompatActivity
         {
             viewModel.deleteMovieFromFavourite(favouriteMovie);
             Toast.makeText(DetailActivity.this, R.string.deleted_from_favourite,Toast.LENGTH_SHORT).show();
+        }
+        setFavourite();
+    }
+
+    private void setFavourite()
+    {
+        favouriteMovie = viewModel.getFavouriteMovieById(id);
+        if(favouriteMovie == null)
+        {
+            imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_to);
+        }
+        else
+        {
+            imageViewAddToFavourite.setImageResource(R.drawable.favourite_remove);
         }
     }
 }

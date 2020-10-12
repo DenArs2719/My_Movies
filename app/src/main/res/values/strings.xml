@@ -9,5 +9,5 @@
     <string name="release_date">Release date:</string>
     <string name="description">Description:</string>
     <string name="added_to_favourite">Added to favourite</string>
-    <string name="deleted_from_favourite">Deleted from favourite</string>
+    <string name="deleted_from_favourite">Removed from favourite</string>
 </resources>
