@@ -10,4 +10,6 @@
     <string name="description">Description:</string>
     <string name="added_to_favourite">Added to favourite</string>
     <string name="deleted_from_favourite">Removed from favourite</string>
+    <string name="itemMain">Main</string>
+    <string name="itemFavourite">Favourite</string>
 </resources>

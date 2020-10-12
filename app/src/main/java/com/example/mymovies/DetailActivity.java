@@ -1,6 +1,7 @@
 ///activity who will show us all popular films
 package com.example.mymovies;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.room.PrimaryKey;
@@ -8,6 +9,9 @@ import androidx.room.PrimaryKey;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +37,40 @@ public class DetailActivity extends AppCompatActivity
 
     private MainViewModel viewModel;
     private FavouriteMovie favouriteMovie;
+
+
+    ///петод для создания меню
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    ///метод для возможности нажатия на элементы меню
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        ///получаем id элемента на который нажали
+        int itemId = item.getItemId();
+
+        ///выбираем ,на что нажали
+        switch (itemId)
+        {
+            case R.id.itemMain:
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.itemFavourite:
+                Intent intentToFavourite = new Intent(this,FavouriteActivity.class);
+                startActivity(intentToFavourite);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
