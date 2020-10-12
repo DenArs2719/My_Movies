@@ -112,7 +112,6 @@ public class JSONUtils
                 String content = objectMovie.getString(KEY_CONTENT);
 
 
-
                 ///создаем обьект Review
                 ///created Movie object
                 Review review = new Review(content,author);
@@ -149,7 +148,6 @@ public class JSONUtils
                 JSONObject objectMovie = jsonArray.getJSONObject(i);
                 String video = BASE_YOUTUBE_URL + objectMovie.getString(KEY_VIDEO);
                 String name = objectMovie.getString(KEY_NAME);
-
 
 
                 ///создаем обьект Trailer

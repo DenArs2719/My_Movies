@@ -77,7 +77,6 @@ public class NetworkUtils
 
         Uri uri = Uri.parse(String.format(BASE_VIDEO_URL,filmId)).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
-                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
                 .build();
 
         try {
@@ -113,7 +112,6 @@ public class NetworkUtils
 
         Uri uri = Uri.parse(String.format(BASE_REVIEW_URL,filmId)).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
-                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
                 .build();
 
         try {

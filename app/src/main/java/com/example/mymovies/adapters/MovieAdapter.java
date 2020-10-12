@@ -29,13 +29,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     ///интерфейс для обработки нажатия на фильм(постер)
-    interface  OnPosterClickListener
+    public interface  OnPosterClickListener
     {
         void onPosterClick(int position);
     }
 
     ///интерфейс для подгрузки фильмом,когда пользователь долистал до конца первую старницу и т.д
-    interface OnReachEndListener
+    public interface OnReachEndListener
     {
         void onReachEnd();
     }

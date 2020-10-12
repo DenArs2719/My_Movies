@@ -18,7 +18,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 {
     private ArrayList<Review> reviews;
 
-    public ReviewAdapter(ArrayList<Review> reviews)
+    public ReviewAdapter()
     {
         this.reviews = reviews;
     }

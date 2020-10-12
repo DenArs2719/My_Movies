@@ -4,9 +4,12 @@ package com.example.mymovies;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.PrimaryKey;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,10 +20,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mymovies.adapters.ReviewAdapter;
+import com.example.mymovies.adapters.TrailerAdapter;
 import com.example.mymovies.data.FavouriteMovie;
 import com.example.mymovies.data.MainViewModel;
 import com.example.mymovies.data.Movie;
+import com.example.mymovies.data.Review;
+import com.example.mymovies.data.Trailer;
+import com.example.mymovies.utils.JSONUtils;
+import com.example.mymovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity
 {
@@ -32,6 +45,12 @@ public class DetailActivity extends AppCompatActivity
     private TextView textViewOverview;
     private Movie movie;
     private ImageView imageViewAddToFavourite;
+
+    private RecyclerView recyclerViewReviews;
+    private RecyclerView recyclerViewTrailers;
+
+    private ReviewAdapter reviewAdapter;
+    private TrailerAdapter trailerAdapter;
 
     private int id = 0;
 
@@ -111,6 +130,33 @@ public class DetailActivity extends AppCompatActivity
 
         setFavourite();
 
+        recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+        recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
+
+        reviewAdapter = new ReviewAdapter();
+        trailerAdapter =  new TrailerAdapter();
+
+        trailerAdapter.setOnTrailerClickListener(new TrailerAdapter.OnTrailerClickListener() {
+            @Override
+            public void onTrailerClick(String url)
+            {
+                ///используем неяный Intent , чтобы запустить трейлер через ютуб
+                Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intentToTrailer);
+            }
+        });
+        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerViewReviews.setAdapter(reviewAdapter);
+        recyclerViewTrailers.setAdapter(trailerAdapter);
+
+
+        loadReview(movie.getId());
+        loadVideo(movie.getId());
+
+
+
 
     }
 
@@ -143,5 +189,29 @@ public class DetailActivity extends AppCompatActivity
         {
             imageViewAddToFavourite.setImageResource(R.drawable.favourite_remove);
         }
+    }
+
+    private void loadReview(int filmId)
+    {
+        ///получем список фильмов
+        JSONObject jsonObject = NetworkUtils.getJSONReviewForVideo(filmId);
+
+        ///получем список отзывов
+        ArrayList<Review> reviews = JSONUtils.getReviewInfoFromJSON(jsonObject);
+
+        reviewAdapter.setReviews(reviews);
+
+    }
+
+    private void loadVideo(int filmId)
+    {
+        ///получем список фильмов
+        JSONObject jsonObject = NetworkUtils.getJSONForVideo(filmId);
+
+        ///получем список трейлеров
+        ArrayList<Trailer>  trailers = JSONUtils.getTrailerFromJSON(jsonObject);
+
+        trailerAdapter.setTrailers(trailers);
+
     }
 }
