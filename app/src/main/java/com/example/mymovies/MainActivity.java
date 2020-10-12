@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity
         });
         switchSort.setChecked(false);
 
+        ///обработка нажатия на фильм
         adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position)

@@ -22,6 +22,9 @@ import java.util.concurrent.ExecutionException;
 public class NetworkUtils
 {
     private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
+    private static final String BASE_VIDEO_URL = "https://api.themoviedb.org/3/movie/%s/videos";
+    private static final String BASE_REVIEW_URL = "https://api.themoviedb.org/3/movie/%s/reviews";
+
     private static final String PARAMS_API_KEY = "api_key";
     private static final String PARAMS_LANGUAGE = "language";
     private static final String PARAMS_SORT_BY = "sort_by";
@@ -66,6 +69,78 @@ public class NetworkUtils
         }
         return result;
     }
+
+    ///метод для создания запроса(url) для видео
+    private static URL buildVideoURL(int filmId)
+    {
+        URL result = null;
+
+        Uri uri = Uri.parse(String.format(BASE_VIDEO_URL,filmId)).buildUpon()
+                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
+                .build();
+
+        try {
+            result = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+    ///метод для получения JSON информации для видео
+    public  static JSONObject getJSONForVideo(int filmId)
+    {
+        JSONObject result = null;
+        URL url = buildVideoURL(filmId);
+        try {
+            result = new JSONLoadTask().execute(url).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return  result;
+    }
+
+    ///метод для создания запроса(url) для отзывов
+    private static URL buildReviewURL(int filmId)
+    {
+        URL result = null;
+
+        Uri uri = Uri.parse(String.format(BASE_REVIEW_URL,filmId)).buildUpon()
+                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
+                .build();
+
+        try {
+            result = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    ///метод для получения JSON информации для отзывов
+    public  static JSONObject getJSONReviewForVideo(int filmId)
+    {
+        JSONObject result = null;
+        URL url = buildReviewURL(filmId);
+        try {
+            result = new JSONLoadTask().execute(url).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return  result;
+    }
+
 
     ///метод для получения JSON из сети
     ///method for getting JSON from network

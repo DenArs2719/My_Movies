@@ -92,5 +92,20 @@ public class FavouriteActivity extends AppCompatActivity
             }
         });
 
+        ///обработка нажатия на фильм
+        adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
+            @Override
+            public void onPosterClick(int position)
+            {
+                ///получаем фильм на который нажали
+                Movie movie = adapter.getMovies().get(position);
+
+                ///создаем Intent
+                Intent intent = new Intent(FavouriteActivity.this,DetailActivity.class);
+                intent.putExtra("id",movie.getId());
+                startActivity(intent);
+            }
+        });
+
     }
 }
