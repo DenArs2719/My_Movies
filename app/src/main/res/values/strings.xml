@@ -12,4 +12,5 @@
     <string name="deleted_from_favourite">Removed from favourite</string>
     <string name="itemMain">Main</string>
     <string name="itemFavourite">Favourite</string>
+    <string name="play_trailer">Play trailer</string>
 </resources>
