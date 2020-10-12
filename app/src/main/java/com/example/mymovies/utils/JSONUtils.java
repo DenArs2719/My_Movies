@@ -5,6 +5,8 @@ package com.example.mymovies.utils;
 import android.util.Log;
 
 import com.example.mymovies.data.Movie;
+import com.example.mymovies.data.Review;
+import com.example.mymovies.data.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +38,7 @@ public class JSONUtils
     ///для видео
     private static final String KEY_VIDEO = "key";
     private static final String KEY_NAME = "name";
+    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
     ///переменные,которые отвечают за размер картинки и ее ссылки
     public static final String BASE_POSTER_URL = "https://image.tmdb.org/t/p/";
@@ -88,9 +91,9 @@ public class JSONUtils
 
 
     ///сделав запрос к базе(JSON сайта) получаем массив с отзывами
-    public static ArrayList<Movie> getReviewInfoFromJSON(JSONObject jsonObject)
+    public static ArrayList<Review> getReviewInfoFromJSON(JSONObject jsonObject)
     {
-        ArrayList<Movie> arrayList = new ArrayList<>();
+        ArrayList<Review> arrayList = new ArrayList<>();
         if(jsonObject == null)
         {
             return arrayList;
@@ -98,25 +101,65 @@ public class JSONUtils
         try {
             ///создаем jsonArray и получаем его по ключу
             JSONArray jsonArray = jsonObject.getJSONArray(KEY_RESULTS);
-            ///проходимя по всем фильмам
+
+            ///проходимя по всем отзывам
             for(int i = 0;i<jsonArray.length();i++)
             {
                 ///получаем наши данные
                 ///get our data
                 JSONObject objectMovie = jsonArray.getJSONObject(i);
-                int id = objectMovie.getInt(KEY_ID);
                 String author = objectMovie.getString(KEY_AUTHOR);
                 String content = objectMovie.getString(KEY_CONTENT);
 
 
 
-                ///создаем обьект Movie
+                ///создаем обьект Review
                 ///created Movie object
-                Movie movie = new Movie(id,voteCount,tittle,originalTitle,overview,posterPath,bigPosterPath,backDropPath,voteAverage,releaseDate);
+                Review review = new Review(content,author);
+
 
                 ///добавляем обьекс в наш массив
                 ///add object in our array
-                arrayList.add(movie);
+                arrayList.add(review);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return arrayList;
+    }
+
+
+    ///сделав запрос к базе(JSON сайта) получаем массив с трейлирами
+    public static ArrayList<Trailer> getTrailerFromJSON(JSONObject jsonObject)
+    {
+        ArrayList<Trailer> arrayList = new ArrayList<>();
+        if(jsonObject == null)
+        {
+            return arrayList;
+        }
+        try {
+            ///создаем jsonArray и получаем его по ключу
+            JSONArray jsonArray = jsonObject.getJSONArray(KEY_RESULTS);
+
+            ///проходимя по всем отзывам
+            for(int i = 0;i<jsonArray.length();i++)
+            {
+                ///получаем наши данные
+                ///get our data
+                JSONObject objectMovie = jsonArray.getJSONObject(i);
+                String video = BASE_YOUTUBE_URL + objectMovie.getString(KEY_VIDEO);
+                String name = objectMovie.getString(KEY_NAME);
+
+
+
+                ///создаем обьект Trailer
+                ///created Movie object
+                Trailer trailer = new Trailer(video,name);
+
+
+                ///добавляем обьекс в наш массив
+                ///add object in our array
+                arrayList.add(trailer);
             }
         } catch (JSONException e) {
             e.printStackTrace();
