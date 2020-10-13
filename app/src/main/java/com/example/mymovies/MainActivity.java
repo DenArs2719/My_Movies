@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.mymovies.adapters.MovieAdapter;
@@ -46,6 +47,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int LOADER_ID = 123;
     private LoaderManager loaderManager;
+
+    private int pageNumber = 1;
+    private static boolean isLoading = false;
+
+    private static  int methodOfSort;
 
     ///метод для создания меню
     @Override
@@ -110,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked)
             {
+                pageNumber = 1;
                 setMethodOfSort(isChecked);
             }
         });
@@ -137,7 +144,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onReachEnd()
             {
-
+                if(!isLoading)
+                {
+                    downloadData(methodOfSort,pageNumber);
+                }
             }
         });
 
@@ -149,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onChanged(List<Movie> movies)
             {
-                adapter.setMovies(movies);
+
             }
         });
 
@@ -170,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void setMethodOfSort(boolean isTopRated)
     {
-        int methodOfSort = 0;
 
         if(isTopRated)
         {
@@ -184,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             textViewPopularity.setTextColor(getResources().getColor(R.color.colorAccent));
             textViewTopRated.setTextColor(getResources().getColor(R.color.white_color));
         }
-        downloadData(methodOfSort,1);
+        downloadData(methodOfSort,pageNumber);
 
     }
 
@@ -213,6 +222,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ///создаем наш загрузчик
         NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this,bundle);
 
+        ///добавляем слушатель к загрузчику
+        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
+            @Override
+            public void onStartLoading()
+            {
+                isLoading = true;
+            }
+        });
         return jsonLoader;
     }
 
@@ -232,10 +249,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 ///и вставим новые данные
                 viewModel.insertMovie(movie);
             }
+
+            adapter.addMovies(movies);
+            pageNumber++;
         }
 
         ///после загрузки данных,нам необходимо удалить загрузчик
         loaderManager.destroyLoader(LOADER_ID);
+
+        ///когда загрузка данных завершена
+        isLoading = false;
     }
 
     @Override

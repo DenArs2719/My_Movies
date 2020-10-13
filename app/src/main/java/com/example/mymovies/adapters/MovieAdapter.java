@@ -53,7 +53,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position)
     {
         ///подгружаем данные, когда пользователь практически дошел до конца списка
-        if(position > movies.size() - 4 && onReachEndListener != null)
+        if(movies.size()>=20 && position > movies.size() - 4 && onReachEndListener != null)
         {
             onReachEndListener.onReachEnd();
         }

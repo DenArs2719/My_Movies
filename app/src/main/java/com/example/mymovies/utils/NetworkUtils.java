@@ -48,6 +48,7 @@ public class NetworkUtils
     public static final int POPULARITY = 0;
     public static final int TOP_RATED = 1;
 
+
     ///метод,который формирует запрос
     public static URL buildURL(int sortBy,int page)
     {
@@ -235,6 +236,14 @@ public class NetworkUtils
     public static class JSONLoader extends AsyncTaskLoader<JSONObject>
     {
         private Bundle bundle;
+        private OnStartLoadingListener onStartLoadingListener;
+
+        public interface OnStartLoadingListener
+        {
+            void onStartLoading();
+        }
+
+
         public JSONLoader(@NonNull Context context, Bundle bundle)
         {
             super(context);
@@ -242,13 +251,20 @@ public class NetworkUtils
 
         }
 
+        public void setOnStartLoadingListener(OnStartLoadingListener onStartLoadingListener)
+        {
+            this.onStartLoadingListener = onStartLoadingListener;
+        }
+
         ///чтобы при инициализции загрузчика loadInBackground() происходила загрузка ,переопределяем метод
-
-
         @Override
         protected void onStartLoading()
         {
             super.onStartLoading();
+            if(onStartLoadingListener != null)
+            {
+                onStartLoadingListener.onStartLoading();
+            }
             forceLoad();
         }
 
