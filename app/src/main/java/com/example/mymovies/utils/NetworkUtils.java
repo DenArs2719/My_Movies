@@ -1,10 +1,16 @@
 ///class who will help us to work with network(take films from www)
 package com.example.mymovies.utils;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.content.AsyncTaskLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +49,7 @@ public class NetworkUtils
     public static final int TOP_RATED = 1;
 
     ///метод,который формирует запрос
-    private static URL buildURL(int sortBy,int page)
+    public static URL buildURL(int sortBy,int page)
     {
         URL result = null;
         String methodOfSort;
@@ -74,7 +80,7 @@ public class NetworkUtils
     }
 
     ///метод для создания запроса(url) для видео
-    private static URL buildVideoURL(int filmId)
+    public static URL buildVideoURL(int filmId)
     {
         URL result = null;
 
@@ -90,6 +96,24 @@ public class NetworkUtils
 
         return result;
 
+    }
+
+    ///метод для создания запроса(url) для отзывов
+    public static URL buildReviewURL(int filmId)
+    {
+        URL result = null;
+
+        Uri uri = Uri.parse(String.format(BASE_REVIEW_URL,filmId)).buildUpon()
+                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+                .build();
+
+        try {
+            result = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     ///метод для получения JSON информации для видео
@@ -108,23 +132,7 @@ public class NetworkUtils
         return  result;
     }
 
-    ///метод для создания запроса(url) для отзывов
-    private static URL buildReviewURL(int filmId)
-    {
-        URL result = null;
 
-        Uri uri = Uri.parse(String.format(BASE_REVIEW_URL,filmId)).buildUpon()
-                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
-                .build();
-
-        try {
-            result = new URL(uri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
     ///метод для получения JSON информации для отзывов
     public  static JSONObject getJSONReviewForVideo(int filmId)
@@ -177,6 +185,103 @@ public class NetworkUtils
             try
             {
                 connection = (HttpURLConnection) urls[0].openConnection();
+
+                ///создаем поток ввода
+                ///create an input stream
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+                ///читаем строками
+                ///read in lines
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                ///для хранения всего результата
+                ///to store the entire result
+                StringBuilder builder = new StringBuilder();
+
+                ///читаем данные
+                ///read data
+                String line = bufferedReader.readLine();
+                while (line != null)
+                {
+                    builder.append(line);
+                    line = bufferedReader.readLine();
+                }
+
+                ///возврашаем нашу строчку
+                ///return our result
+                result = new JSONObject(builder.toString());
+
+                Log.i("NetworkUtils",result.toString());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                if(connection != null)
+                {
+                    connection.disconnect();
+                }
+            }
+
+            return result;
+        }
+    }
+
+
+
+    ///класс для улучшенной загрузки данных
+    public static class JSONLoader extends AsyncTaskLoader<JSONObject>
+    {
+        private Bundle bundle;
+        public JSONLoader(@NonNull Context context, Bundle bundle)
+        {
+            super(context);
+            this.bundle = bundle;
+
+        }
+
+        ///чтобы при инициализции загрузчика loadInBackground() происходила загрузка ,переопределяем метод
+
+
+        @Override
+        protected void onStartLoading()
+        {
+            super.onStartLoading();
+            forceLoad();
+        }
+
+        @Nullable
+        @Override
+        public JSONObject loadInBackground()
+        {
+            if(bundle == null) {
+                return null;
+            }
+
+            ///получаем обьект ввиде строки
+            String urlAsString = bundle.getString("url");
+
+            ///получаем URL
+            URL url = null;
+            try {
+                url = new URL(urlAsString);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            ///теперь загружаем данные
+            JSONObject result = null;
+            if(url == null)
+            {
+                return null;
+            }
+            ///открываем соединение
+            ///open connection
+            HttpURLConnection connection = null;
+            try
+            {
+                connection = (HttpURLConnection) url.openConnection();
 
                 ///создаем поток ввода
                 ///create an input stream

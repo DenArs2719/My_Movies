@@ -13,6 +13,7 @@ public abstract class MovieDataBase extends RoomDatabase
     private static final String DB_NAME = "movies.db";
     private static final Object LOCK = new Object();
 
+    ///ипользуется паттерн SINGLETON
     public static MovieDataBase getInstance(Context context)
     {
         ///для многопоточности
