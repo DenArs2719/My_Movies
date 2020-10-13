@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +51,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private int pageNumber = 1;
     private static boolean isLoading = false;
-
     private static  int methodOfSort;
+
+    private ProgressBar progressBarLoading;
 
     ///метод для создания меню
     @Override
@@ -98,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
+        progressBarLoading = findViewById(R.id.progressBarLoading);
+
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         adapter = new MovieAdapter();
 
@@ -222,17 +226,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ///создаем наш загрузчик
         NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this,bundle);
 
-        ///добавляем слушатель к загрузчику
+        ///добавляем слушатель к загрузчику(начало загрузки данных)
         jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
             @Override
             public void onStartLoading()
             {
+                progressBarLoading.setVisibility(View.VISIBLE);
                 isLoading = true;
+
             }
         });
         return jsonLoader;
     }
 
+    ///завершение загрузки
     @Override
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject jsonObject)
     {
@@ -252,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             adapter.addMovies(movies);
             pageNumber++;
+            progressBarLoading.setVisibility(View.INVISIBLE);
         }
 
         ///после загрузки данных,нам необходимо удалить загрузчик
