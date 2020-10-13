@@ -129,6 +129,7 @@
         android:id="@+id/recyclerViewTrailers"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewOverview"/>
@@ -137,6 +138,7 @@
         android:id="@+id/recyclerViewReviews"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewTrailers"/>

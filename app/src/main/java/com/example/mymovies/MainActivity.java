@@ -163,7 +163,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onChanged(List<Movie> movies)
             {
-
+                if(pageNumber == 1)
+                {
+                    adapter.setMovies(movies);
+                }
             }
         });
 
@@ -249,8 +252,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ///если пришли новые данные, то мы их загрузим
         if(movies != null && !movies.isEmpty())
         {
-            ///отчистим предыдушие данные
-            viewModel.deleteAllMovies();
+
+            ///делаем в случаи отсутсвия интернета
+            if(pageNumber == 1) {
+                ///отчистим предыдушие данные
+                viewModel.deleteAllMovies();
+                adapter.clear();
+            }
             for(Movie movie: movies)
             {
                 ///и вставим новые данные

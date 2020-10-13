@@ -86,6 +86,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies;
     }
 
+    public void clear()
+    {
+        this.movies.clear();
+
+        ///оповешаем адаптер о том ,что произошли изменения
+        notifyDataSetChanged();
+    }
+
     public void setMovies(List<Movie> movies)
     {
         this.movies = movies;
