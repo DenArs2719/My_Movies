@@ -11,9 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymovies.R;
 import com.example.mymovies.data.Trailer;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -27,24 +24,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     public interface OnTrailerClickListener
     {
         void onTrailerClick(String url);
-    }
-
-    public void setOnTrailerClickListener(OnTrailerClickListener onTrailerClickListener)
-    {
-        this.onTrailerClickListener = onTrailerClickListener;
-    }
-
-    public TrailerAdapter()
-    {
-        this.trailers = trailers;
-    }
-
-    public void setTrailers(ArrayList<Trailer> trailers)
-    {
-        this.trailers = trailers;
-
-        ///говорим адаптеру,что данные изменились
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -62,9 +41,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         Trailer trailer = trailers.get(position);
 
         holder.textViewNameOfVideo.setText(trailer.getName());
-
-
-
     }
 
     @Override
@@ -76,10 +52,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     {
         private ImageView imageViewPlay;
         private TextView textViewNameOfVideo;
+
         public TrailerViewHolder(@NonNull View itemView)
         {
             super(itemView);
+
             textViewNameOfVideo = itemView.findViewById(R.id.textViewNameOfVideo);
+
             itemView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -87,10 +66,24 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
                 {
                     if(onTrailerClickListener != null)
                     {
-                      onTrailerClickListener.onTrailerClick(trailers.get(getAdapterPosition()).getVideo() );
+                      onTrailerClickListener.onTrailerClick(trailers.get(getAdapterPosition()).getVideo());
                     }
                 }
             });
         }
+    }
+
+    public void setOnTrailerClickListener(OnTrailerClickListener onTrailerClickListener)
+    {
+        this.onTrailerClickListener = onTrailerClickListener;
+    }
+
+
+    public void setTrailers(ArrayList<Trailer> trailers)
+    {
+        this.trailers = trailers;
+
+        ///говорим адаптеру,что данные изменились
+        notifyDataSetChanged();
     }
 }

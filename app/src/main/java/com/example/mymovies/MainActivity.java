@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
 
     private MainViewModel viewModel;
 
-    ///петод для создания меню
+    ///метод для создания меню
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -78,15 +78,20 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
-        recyclerViewPosters.setLayoutManager(new GridLayoutManager(this,2));
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         adapter = new MovieAdapter();
+
+        ///чтобы фильмы загрузились сразу
         switchSort.setChecked(true);
+
+        recyclerViewPosters.setLayoutManager(new GridLayoutManager(this,2));
+
         ///устанавливаем адаптер в recyclerViewPosters
         recyclerViewPosters.setAdapter(adapter);
+
 
         ///устанавливаем слушатель
         switchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -112,6 +117,8 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra("id",movie.getId());
                 startActivity(intent);
             }
+
+
         });
 
         adapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener()
@@ -172,7 +179,7 @@ public class MainActivity extends AppCompatActivity
 
     private void downloadData(int methodOfSort, int page)
     {
-        ///получем список фильмов
+        ///получем фильмы
         JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort,page);
 
         ///получем список фильмом

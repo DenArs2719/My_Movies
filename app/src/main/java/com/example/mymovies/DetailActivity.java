@@ -115,12 +115,13 @@ public class DetailActivity extends AppCompatActivity
             finish();
         }
 
-        ///получаем наш  viewModel
+        ///получаем наш  viewModel(который отвечает за фильм)
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         /// получаем наш фильм
         movie = viewModel.getMovieById(id);
 
+        ///устанавливаем значения
         Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
         textViewTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());
@@ -140,11 +141,12 @@ public class DetailActivity extends AppCompatActivity
             @Override
             public void onTrailerClick(String url)
             {
-                ///используем неяный Intent , чтобы запустить трейлер через ютуб
+                ///используем неяный Intent , чтобы запустить трейлер через youtube
                 Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intentToTrailer);
             }
         });
+
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
 
@@ -156,13 +158,11 @@ public class DetailActivity extends AppCompatActivity
         loadVideo(movie.getId());
 
 
-
-
     }
 
+    ///метод для обработки нажатия на картинку ,для добавления фильма в избранное
     public void onClickChangeFavourite(View view)
     {
-
         ///значит,что фильма в базе данных нет
         if(favouriteMovie == null)
         {
@@ -180,7 +180,9 @@ public class DetailActivity extends AppCompatActivity
 
     private void setFavourite()
     {
+        ///получаем фильм
         favouriteMovie = viewModel.getFavouriteMovieById(id);
+
         if(favouriteMovie == null)
         {
             imageViewAddToFavourite.setImageResource(R.drawable.favourite_add_to);
@@ -191,26 +193,30 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
+    ///метод для загрузки отзывов
     private void loadReview(int filmId)
     {
-        ///получем список фильмов
+        ///получем отзывы
         JSONObject jsonObject = NetworkUtils.getJSONReviewForVideo(filmId);
 
         ///получем список отзывов
         ArrayList<Review> reviews = JSONUtils.getReviewInfoFromJSON(jsonObject);
 
+        ///устанавливаем отзывы в адаптере
         reviewAdapter.setReviews(reviews);
 
     }
 
+    ///метод для загрузки трейлеров
     private void loadVideo(int filmId)
     {
-        ///получем список фильмов
+        ///получем  трейлеры
         JSONObject jsonObject = NetworkUtils.getJSONForVideo(filmId);
 
         ///получем список трейлеров
         ArrayList<Trailer>  trailers = JSONUtils.getTrailerFromJSON(jsonObject);
 
+        ///устанавливаем трейлеры в адаптер
         trailerAdapter.setTrailers(trailers);
 
     }

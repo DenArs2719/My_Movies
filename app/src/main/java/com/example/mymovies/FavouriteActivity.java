@@ -68,6 +68,7 @@ public class FavouriteActivity extends AppCompatActivity
         recyclerViewFavouriteMovies = findViewById(R.id.recyclerViewFavouriteMovies);
         adapter = new MovieAdapter();
         recyclerViewFavouriteMovies.setLayoutManager(new GridLayoutManager(this,2));
+
         ///устанавливаем адаптер у recyclerView
         recyclerViewFavouriteMovies.setAdapter(adapter);
 
@@ -105,6 +106,7 @@ public class FavouriteActivity extends AppCompatActivity
                 intent.putExtra("id",movie.getId());
                 startActivity(intent);
             }
+
         });
 
     }

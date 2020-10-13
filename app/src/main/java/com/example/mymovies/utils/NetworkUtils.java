@@ -29,12 +29,14 @@ public class NetworkUtils
     private static final String PARAMS_LANGUAGE = "language";
     private static final String PARAMS_SORT_BY = "sort_by";
     private static final String PARAMS_PAGE = "page";
+    private static final String PARAMS_VOTE_COUNT_GTE = "vote_count.gte";
 
     private static final String API_KEY = "0936d8c770393bd195267285dea65d1d";
     private static final String LANGUAGE_VALUE = "ru-RU";
 
     private static final String SORT_BY_POPULARITY = "popularity.desc";
     private static final String SORT_BY_TOP_RATED = "vote_average.desc";
+    private static final String MIN_VOTE_COUNT_GTE = "1000";
 
 
     public static final int POPULARITY = 0;
@@ -57,6 +59,7 @@ public class NetworkUtils
                     .appendQueryParameter(PARAMS_API_KEY, API_KEY)
                     .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
                     .appendQueryParameter(PARAMS_SORT_BY,methodOfSort)
+                    .appendQueryParameter(PARAMS_VOTE_COUNT_GTE,MIN_VOTE_COUNT_GTE)
                     .appendQueryParameter(PARAMS_PAGE,Integer.toString(page))
                     .build();
 
@@ -217,7 +220,5 @@ public class NetworkUtils
             return result;
         }
     }
-
-
 
 }

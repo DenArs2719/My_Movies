@@ -29,7 +29,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     ///интерфейс для обработки нажатия на фильм(постер)
-    public interface  OnPosterClickListener
+    public interface OnPosterClickListener
     {
         void onPosterClick(int position);
     }
@@ -39,6 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     {
         void onReachEnd();
     }
+
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -80,22 +81,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
 
-    public List<Movie> getMovies() {
+    public List<Movie> getMovies()
+    {
         return movies;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(List<Movie> movies)
+    {
         this.movies = movies;
 
         ///когда добавили новые элементы,оповешаем об этом наш адаптер
         notifyDataSetChanged();
     }
 
-    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
+    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener)
+    {
         this.onPosterClickListener = onPosterClickListener;
     }
 
-    public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
+    public void setOnReachEndListener(OnReachEndListener onReachEndListener)
+    {
         this.onReachEndListener = onReachEndListener;
     }
 
@@ -107,9 +112,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view)
+                {
                     if(onPosterClickListener != null)
                     {
                         onPosterClickListener.onPosterClick(getAdapterPosition());

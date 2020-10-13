@@ -13,12 +13,14 @@ import java.util.concurrent.ExecutionException;
 public class MainViewModel extends AndroidViewModel
 {
     private static MovieDataBase dataBase;
+
     private LiveData<List<Movie>> movies;
     private LiveData<List<FavouriteMovie>> favouriteMovies;
 
     public MainViewModel(@NonNull Application application)
     {
         super(application);
+
         ///получаем базу данных
         dataBase = MovieDataBase.getInstance(getApplication());
 
@@ -27,15 +29,6 @@ public class MainViewModel extends AndroidViewModel
         favouriteMovies = dataBase.movieDao().getAllMoviesFromFavourites();
     }
 
-    public LiveData<List<Movie>> getMovies()
-    {
-        return movies;
-    }
-
-    public LiveData<List<FavouriteMovie>> getFavouriteMovies()
-    {
-        return favouriteMovies;
-    }
 
     ///метод для получения фильма по id
     public Movie getMovieById(int movieId)
@@ -73,7 +66,6 @@ public class MainViewModel extends AndroidViewModel
     ///класс для потока, получения фильма из базы
     private static class GetMovieTask extends AsyncTask<Integer,Void,Movie>
     {
-
         @Override
         protected Movie doInBackground(Integer... integers) {
             if(integers != null && integers.length > 0 )
@@ -125,7 +117,9 @@ public class MainViewModel extends AndroidViewModel
         }
     }
 
+
     ///работа с базой favourite_movies
+
     ///метод для вставки фильма
     public void insertMovieToFavourite(FavouriteMovie movie)
     {
@@ -190,9 +184,20 @@ public class MainViewModel extends AndroidViewModel
         protected Void doInBackground(FavouriteMovie... movies)
         {
             if (movies != null && movies.length > 0) {
-                dataBase.movieDao().deleteMovieToFavourite(movies[0]);
+                dataBase.movieDao().deleteMovieFromFavourite(movies[0]);
             }
             return null;
         }
+    }
+
+
+    public LiveData<List<Movie>> getMovies()
+    {
+        return movies;
+    }
+
+    public LiveData<List<FavouriteMovie>> getFavouriteMovies()
+    {
+        return favouriteMovies;
     }
 }

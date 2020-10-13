@@ -37,7 +37,7 @@ public interface MovieDao
     void insertMovieToFavourite(FavouriteMovie movie);
 
     @Delete
-    void deleteMovieToFavourite(FavouriteMovie movie);
+    void deleteMovieFromFavourite(FavouriteMovie movie);
 
 
 

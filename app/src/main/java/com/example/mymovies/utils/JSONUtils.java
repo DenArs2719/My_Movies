@@ -117,7 +117,7 @@ public class JSONUtils
                 Review review = new Review(content,author);
 
 
-                ///добавляем обьекс в наш массив
+                ///добавляем обьект в наш массив
                 ///add object in our array
                 arrayList.add(review);
             }
@@ -155,7 +155,7 @@ public class JSONUtils
                 Trailer trailer = new Trailer(video,name);
 
 
-                ///добавляем обьекс в наш массив
+                ///добавляем обьект в наш массив
                 ///add object in our array
                 arrayList.add(trailer);
             }

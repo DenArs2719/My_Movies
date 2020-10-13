@@ -18,19 +18,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 {
     private ArrayList<Review> reviews;
 
-    public ReviewAdapter()
-    {
-        this.reviews = reviews;
-    }
-
-    public void setReviews(ArrayList<Review> reviews)
-    {
-        this.reviews = reviews;
-
-        ///сообщаем адаптеру ,что данные изменились
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -64,9 +51,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         public ReviewViewHolder(@NonNull View itemView)
         {
             super(itemView);
+
             textViewContent = itemView.findViewById(R.id.textViewContent);
             textViewAuthor = itemView.findViewById(R.id.textViewAuthor);
 
         }
+    }
+
+    public void setReviews(ArrayList<Review> reviews)
+    {
+        this.reviews = reviews;
+
+        ///сообщаем адаптеру ,что данные изменились
+        notifyDataSetChanged();
     }
 }
